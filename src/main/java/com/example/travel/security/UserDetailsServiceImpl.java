@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.travel.entity.User;
 import com.example.travel.repository.UserRepository;
 
-@Servive
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
   private final UserRepository userRepository;
 
@@ -25,9 +25,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       User user = userRepository.findByEmail(email);
       String userRoleName = user.getRole().getName();
       Collection<GrantedAuthority> authorities = new ArrayList<>();
+      authorities.add(new SimpleGrantedAuthority(userRoleName));
+      return new UserDetailsImpl(user, authorities);
     } catch (Exception e) {
       throw new UsernameNotFoundException("user not found.");
     }
   }
-
 }
